@@ -1,10 +1,11 @@
 services:
   - type: web
-    name: fathom
+    name: fathom-backend
     env: node
     region: oregon
     plan: free
-    buildCommand: npm ci && npm ci --prefix client && npm ci --prefix server && npm run build
+    rootDir: ./server
+    buildCommand: npm ci
     startCommand: npm run start
     envVars:
       - key: NODE_VERSION
@@ -15,3 +16,21 @@ services:
         sync: false
       - key: ACCESS_CODE
         value: JUDGE2024
+      - key: PORT
+        value: 3001
+  
+  - type: web
+    name: fathom-frontend
+    env: static
+    region: oregon
+    plan: free
+    rootDir: ./client
+    buildCommand: npm ci && npm run build
+    staticPublishPath: ./dist
+    envVars:
+      - key: NODE_VERSION
+        value: 18.18.0
+    routes:
+      - type: rewrite
+        source: /api/*
+        destination: https://fathom-backend.onrender.com/api/*
