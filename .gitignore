@@ -16,11 +16,11 @@ fathom.db
 
 # Generated audio files (large, regenerated on demand)
 public/audio/tracks/
-public/audio/soundscapes/
-public/audio/music/
-public/audio/interrupts/
-public/audio/previews/voice_*
 public/audio/temp/
+
+# Keep static audio assets (music, soundscapes, interrupts, lens previews) in git
+# Only exclude dynamically generated voice previews
+public/audio/previews/voice_*.mp3
 
 # OS files
 .DS_Store
