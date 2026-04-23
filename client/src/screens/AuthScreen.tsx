@@ -103,7 +103,6 @@ function SoundwaveBackground() {
 
 export function AuthScreen() {
   const [displayName, setDisplayName] = useState('');
-  const [accessCode, setAccessCode] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const setUser = useStore((s) => s.setUser);
@@ -112,17 +111,12 @@ export function AuthScreen() {
     e.preventDefault();
     setError('');
     const trimmed = displayName.trim();
-    const trimmedCode = accessCode.trim();
     if (!trimmed) { setError('Please enter your name.'); return; }
-    if (!trimmedCode) { setError('Please enter the access code.'); return; }
     setIsLoading(true);
     try {
       const res = await fetch('/api/auth/guest', {
         method: 'POST',
-        headers: { 
-          'Content-Type': 'application/json',
-          'X-Access-Code': trimmedCode,
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ displayName: trimmed }),
       });
       if (!res.ok) { 
@@ -130,8 +124,6 @@ export function AuthScreen() {
         setError(data.error || data.message || 'Something went wrong.'); 
         return; 
       }
-      // Store access code in localStorage for future requests
-      localStorage.setItem('fathom_access_code', trimmedCode);
       setUser((await res.json()).user);
     } catch { setError('Could not connect to the server.'); }
     finally { setIsLoading(false); }
@@ -232,25 +224,6 @@ export function AuthScreen() {
               className="w-full min-h-[48px] sm:min-h-[40px] rounded-xl text-body px-4 py-3.5 text-[var(--text-primary)] placeholder:text-[var(--text-muted)] focus:outline-none focus-visible:outline-3 focus-visible:outline-[var(--border-focus)] focus-visible:outline-offset-[3px] transition-all duration-200"
               style={{ backgroundColor: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}
             />
-          </div>
-
-          <div>
-            <label htmlFor="accessCode" className="text-caption block mb-2 text-[var(--text-tertiary)]">
-              Access code
-            </label>
-            <input
-              id="accessCode"
-              type="text"
-              value={accessCode}
-              onChange={(e) => setAccessCode(e.target.value)}
-              placeholder="Enter judge access code"
-              aria-label="Access code"
-              className="w-full min-h-[48px] sm:min-h-[40px] rounded-xl text-body px-4 py-3.5 text-[var(--text-primary)] placeholder:text-[var(--text-muted)] focus:outline-none focus-visible:outline-3 focus-visible:outline-[var(--border-focus)] focus-visible:outline-offset-[3px] transition-all duration-200"
-              style={{ backgroundColor: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}
-            />
-            <p className="text-caption mt-2 text-[var(--text-muted)]">
-              This demo is restricted to hackathon judges
-            </p>
           </div>
 
           {error && (

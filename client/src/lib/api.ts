@@ -19,21 +19,7 @@ async function request<T>(url: string, options: RequestInit = {}): Promise<T> {
     headers['X-User-Id'] = user.id;
   }
 
-  // Add access code from localStorage
-  const accessCode = localStorage.getItem('fathom_access_code');
-  if (accessCode) {
-    headers['X-Access-Code'] = accessCode;
-  }
-
   const res = await fetch(url, { ...options, headers });
-
-  if (res.status === 403) {
-    // Access denied - clear invalid code and redirect to auth
-    localStorage.removeItem('fathom_access_code');
-    useStore.getState().logout();
-    window.location.href = '/auth';
-    throw new ApiError(403, 'Access denied');
-  }
 
   if (res.status === 401) {
     useStore.getState().logout();

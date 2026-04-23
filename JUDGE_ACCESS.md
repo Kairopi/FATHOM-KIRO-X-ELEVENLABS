@@ -1,32 +1,22 @@
-# Fathom - Judge Access Guide
+# Fathom - Demo Access Guide
 
-## Access Information
-
-This demo is protected to preserve API credits for hackathon evaluation.
-
-### Access Code
-```
-JUDGE2024
-```
-
-### How to Access
+## How to Use
 
 1. Visit the deployed application
 2. Enter your name
-3. Enter the access code: **JUDGE2024**
-4. Click "Start Learning"
+3. Click "Start Learning"
 
 ### Usage Limits
 
-To ensure all judges can evaluate the application:
+To preserve API credits for all users:
 - Each user is limited to **3 generations**
-- This helps preserve the remaining API credits (~50 credits = ~6 total generations)
+- This helps ensure the demo stays available for everyone
 
 ### What You Can Do
 
 1. Generate audio from any text content or URL
 2. Choose from 8 different learning lenses (perspectives)
-3. Select from 3 AI voices
+3. Select from 5 AI voices
 4. Add background music and soundscapes
 5. Save tracks to your library
 6. Share tracks with others
@@ -37,10 +27,6 @@ To ensure all judges can evaluate the application:
 2. **URL Test**: Try a Wikipedia article or blog post URL
 3. **Lens Comparison**: Generate the same content with different lenses (Chef vs Scientist)
 4. **Voice Test**: Try different voice combinations
-
-### Support
-
-If you encounter any issues or need additional access, please contact the developer through the GitHub repository.
 
 ## Technical Details
 

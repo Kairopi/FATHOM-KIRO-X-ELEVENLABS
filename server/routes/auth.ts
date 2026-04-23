@@ -1,11 +1,10 @@
 import { Router } from 'express';
 import { nanoid } from 'nanoid';
 import { createUser } from '../db/queries.js';
-import { requireAccessCode } from '../middleware/accessControl.js';
 
 const router = Router();
 
-router.post('/guest', requireAccessCode, (req, res) => {
+router.post('/guest', (req, res) => {
   const { displayName } = req.body;
 
   if (!displayName || typeof displayName !== 'string' || displayName.trim().length === 0) {

@@ -2,7 +2,7 @@ import { useRef, useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Play, Pause, SkipForward, SkipBack } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { SPRING_SNAPPY } from '@/lib/motion';
+import { SPRING_SNAPPY, STAGGER_FAST } from '@/lib/motion';
 import { useAudioPlayer } from '@/hooks/useAudioPlayer';
 import { useStore } from '@/store';
 import { getLensMetadata } from '@/lib/lenses';
@@ -27,6 +27,140 @@ function formatTime(seconds: number): string {
   return `${mins}:${secs.toString().padStart(2, '0')}`;
 }
 
+// Custom Waveform Component with S-tier specs
+function CustomWaveform({
+  heights,
+  currentTime,
+  duration,
+  lensAccentColor,
+  onSeek,
+  isReady,
+}: {
+  heights: number[];
+  currentTime: number;
+  duration: number;
+  lensAccentColor: string;
+  onSeek: (time: number) => void;
+  isReady: boolean;
+}) {
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const [tooltipPosition, setTooltipPosition] = useState({ x: 0, time: 0 });
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const percentage = x / rect.width;
+    const time = percentage * duration;
+    const barIndex = Math.floor(x / 3); // 2px bar + 1px gap
+    setHoveredIndex(barIndex);
+    setTooltipPosition({ x, time });
+  };
+
+  const handleMouseLeave = () => {
+    setHoveredIndex(null);
+  };
+
+  const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const percentage = x / rect.width;
+    const time = percentage * duration;
+    onSeek(time);
+  };
+
+  const progressPercentage = duration > 0 ? (currentTime / duration) * 100 : 0;
+
+  return (
+    <div className="relative">
+      <div
+        className="relative w-full h-20 md:h-[120px] bg-[var(--bg-tertiary)] border border-[var(--border-secondary)] rounded-lg overflow-hidden cursor-pointer"
+        onMouseMove={handleMouseMove}
+        onMouseLeave={handleMouseLeave}
+        onClick={handleClick}
+      >
+        {/* Waveform bars with stagger animation */}
+        <motion.div
+          initial="hidden"
+          animate={isReady ? "visible" : "hidden"}
+          variants={{
+            visible: {
+              transition: { staggerChildren: STAGGER_FAST } // 0.002 (2ms delay per bar - S-tier spec)
+            }
+          }}
+          className="flex items-end justify-center h-full px-2 gap-[1px]"
+        >
+          {heights.map((height, index) => {
+            const isPlayed = (index / heights.length) * 100 <= progressPercentage;
+            const isHovered = hoveredIndex === index;
+            
+            return (
+              <motion.div
+                key={index}
+                variants={{
+                  hidden: { scaleY: 0 },
+                  visible: { scaleY: height }
+                }}
+                transition={{ duration: 0.4, ease: "easeOut" }}
+                style={{
+                  width: '2px', // S-tier spec: 2px width
+                  height: '100%',
+                  backgroundColor: isPlayed ? lensAccentColor : `${lensAccentColor}40`,
+                  opacity: isHovered ? 0.6 : 1,
+                  transformOrigin: 'bottom'
+                }}
+              />
+            );
+          })}
+        </motion.div>
+
+        {/* Progress playhead */}
+        <motion.div
+          animate={{ x: `${progressPercentage}%` }}
+          transition={{ duration: 0.1, ease: "linear" }}
+          className="absolute top-0 bottom-0 w-[3px] pointer-events-none"
+          style={{
+            backgroundColor: lensAccentColor,
+            boxShadow: `0 0 8px ${lensAccentColor}66`,
+            transform: 'translateX(-50%)'
+          }}
+        />
+      </div>
+
+      {/* Scrubbing tooltip with mini waveform */}
+      {hoveredIndex !== null && isReady && (
+        <motion.div
+          initial={{ opacity: 0, y: -4 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -4 }}
+          transition={{ duration: 0.15 }}
+          className="absolute bottom-full mb-2 px-2 py-1.5 bg-[var(--bg-secondary)] border border-[var(--border-primary)] rounded text-xs pointer-events-none z-10"
+          style={{
+            left: `${tooltipPosition.x}px`,
+            transform: 'translateX(-50%)',
+          }}
+        >
+          <span className="text-[var(--text-primary)] font-medium tabular-nums">
+            {formatTime(tooltipPosition.time)}
+          </span>
+          {/* Mini 3-bar waveform preview */}
+          <div className="flex gap-[1px] mt-1 justify-center">
+            {[0.6, 1, 0.8].map((h, i) => (
+              <div
+                key={i}
+                style={{
+                  width: '2px',
+                  height: `${h * 12}px`,
+                  backgroundColor: lensAccentColor,
+                }}
+              />
+            ))}
+          </div>
+        </motion.div>
+      )}
+    </div>
+  );
+}
+
 export function WaveformPlayer({
   audioUrl,
   onTimeUpdate,
@@ -38,12 +172,9 @@ export function WaveformPlayer({
   playRef,
 }: WaveformPlayerProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const waveformContainerRef = useRef<HTMLDivElement>(null);
   const playbackSpeed = useStore((s) => s.playbackSpeed);
   const currentTrack = useStore((s) => s.currentTrack);
   const [audioError, setAudioError] = useState(false);
-  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
-  const [tooltipPosition, setTooltipPosition] = useState({ x: 0, time: 0 });
 
   // Get lens accent color
   const lensAccentColor = currentTrack?.lens
@@ -62,7 +193,8 @@ export function WaveformPlayer({
     play,
     pause,
     setSpeed,
-  } = useAudioPlayer({ containerRef, url: audioUrl, lensAccentColor });
+    waveformHeights,
+  } = useAudioPlayer({ containerRef, url: audioUrl });
 
   // Expose seekTo to parent via ref
   useEffect(() => {
@@ -103,26 +235,10 @@ export function WaveformPlayer({
     }
   }, [isReady, isPlaying, currentTime, duration, onFinish]);
 
-  // Audio error is detected by WaveSurfer failing to load
+  // Audio error is detected by audio failing to load
   useEffect(() => {
     setAudioError(false);
   }, [audioUrl]);
-
-  // Handle hover on waveform for tooltip
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!waveformContainerRef.current || !duration) return;
-    const rect = waveformContainerRef.current.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const percentage = x / rect.width;
-    const time = percentage * duration;
-    const barIndex = Math.floor(x / 3); // 2px bar + 1px gap
-    setHoveredIndex(barIndex);
-    setTooltipPosition({ x, time });
-  };
-
-  const handleMouseLeave = () => {
-    setHoveredIndex(null);
-  };
 
   if (audioError) {
     return (
@@ -134,57 +250,22 @@ export function WaveformPlayer({
 
   return (
     <div className="flex flex-col gap-4">
-      {/* Waveform container with hover tooltip */}
-      <div
-        ref={waveformContainerRef}
-        className="relative"
-        onMouseMove={handleMouseMove}
-        onMouseLeave={handleMouseLeave}
-      >
-        {!isReady && !audioError ? (
-          <SkeletonWaveform lensAccent={lensAccentColor} />
-        ) : null}
-        <div
-          ref={containerRef}
-          className={cn(
-            'w-full rounded-lg overflow-hidden bg-[var(--bg-tertiary)] border border-[var(--border-secondary)]',
-            'h-20 md:h-[120px]',
-            !isReady && !audioError && 'hidden'
-          )}
+      {/* Custom Waveform with S-tier specs */}
+      {!isReady ? (
+        <SkeletonWaveform lensAccent={lensAccentColor} />
+      ) : (
+        <CustomWaveform
+          heights={waveformHeights}
+          currentTime={currentTime}
+          duration={duration}
+          lensAccentColor={lensAccentColor}
+          onSeek={seekTo}
+          isReady={isReady}
         />
+      )}
 
-        {/* Scrubbing tooltip with mini waveform */}
-        {hoveredIndex !== null && isReady && (
-          <motion.div
-            initial={{ opacity: 0, y: -4 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -4 }}
-            transition={{ duration: 0.15 }}
-            className="absolute bottom-full mb-2 px-2 py-1.5 bg-[var(--bg-secondary)] border border-[var(--border-primary)] rounded text-xs pointer-events-none z-10"
-            style={{
-              left: `${tooltipPosition.x}px`,
-              transform: 'translateX(-50%)',
-            }}
-          >
-            <span className="text-[var(--text-primary)] font-medium tabular-nums">
-              {formatTime(tooltipPosition.time)}
-            </span>
-            {/* Mini 3-bar waveform preview */}
-            <div className="flex gap-[1px] mt-1 justify-center">
-              {[0.6, 1, 0.8].map((h, i) => (
-                <div
-                  key={i}
-                  style={{
-                    width: '2px',
-                    height: `${h * 12}px`,
-                    backgroundColor: lensAccentColor,
-                  }}
-                />
-              ))}
-            </div>
-          </motion.div>
-        )}
-      </div>
+      {/* Hidden container ref for useAudioPlayer hook */}
+      <div ref={containerRef} className="hidden" />
 
       {/* Transport controls */}
       <div className="flex items-center justify-center gap-4">
@@ -205,8 +286,8 @@ export function WaveformPlayer({
         <motion.button
           type="button"
           layout
-          whileHover={{ scale: 1.08, boxShadow: '0 8px 16px rgba(139, 92, 246, 0.3)' }}
-          whileTap={{ scale: 0.95 }}
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
           transition={SPRING_SNAPPY}
           onClick={playPause}
           disabled={!isReady}
@@ -271,13 +352,14 @@ export function WaveformPlayer({
             <motion.button
               key={speed}
               type="button"
-              whileHover={{ scale: 1.08, y: -1 }}
-              whileTap={{ scale: 0.95 }}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
               transition={SPRING_SNAPPY}
               onClick={() => setSpeed(speed)}
+              disabled={!isReady}
               aria-label={`Set playback speed to ${speed}x`}
               className={cn(
-                'px-3 py-1.5 text-xs font-medium rounded-[var(--radius-button)] transition-all duration-200',
+                'px-3 py-1.5 text-xs font-medium rounded-[var(--radius-button)] transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed',
                 playbackSpeed === speed
                   ? 'bg-[var(--accent)] text-white shadow-md shadow-[var(--accent)]/20'
                   : 'bg-transparent text-[var(--text-tertiary)] hover:text-[var(--text-secondary)] hover:bg-[var(--bg-tertiary)]'

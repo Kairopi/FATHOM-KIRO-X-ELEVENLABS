@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { nanoid } from 'nanoid';
 import { userMiddleware } from '../middleware/user.js';
-import { requireAccessCode, rateLimitGenerations } from '../middleware/accessControl.js';
+import { rateLimitGenerations } from '../middleware/accessControl.js';
 import { preprocessContent, generateScript, refineScript, generateTakeaways, generateQuiz, type ScriptSegment } from '../services/dashscope.js';
 import { synthesizeSegment, synthesizeDialogue, generateSoundscape, generateMusic } from '../services/elevenlabs.js';
 import { assembleVoiceTrack, saveSoundscape, saveMusic } from '../services/audio-assembler.js';
@@ -31,7 +31,7 @@ function sendProgress(res: any, step: string, current: number, total: number) {
   res.write(`data: ${data}\n\n`);
 }
 
-router.post('/', requireAccessCode, rateLimitGenerations, userMiddleware, async (req, res) => {
+router.post('/', rateLimitGenerations, userMiddleware, async (req, res) => {
   const { content, lens, format = 'deep_dive', length = 'medium', voiceConfig } = req.body as GenerateBody;
 
   // Validate input
