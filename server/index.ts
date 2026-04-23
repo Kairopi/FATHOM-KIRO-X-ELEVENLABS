@@ -108,7 +108,12 @@ console.log(`[server] Client dist exists: ${existsSync(clientDistPath)}`);
 if (existsSync(clientDistPath)) {
   app.use(express.static(clientDistPath));
   // SPA fallback — serve index.html for all non-API routes
-  app.get('/*', (_req, res) => {
+  // Use a function-based route handler for Express 5 compatibility
+  app.use((_req, res, next) => {
+    // Skip if it's an API route
+    if (_req.path.startsWith('/api') || _req.path.startsWith('/audio')) {
+      return next();
+    }
     res.sendFile(path.join(clientDistPath, 'index.html'));
   });
   console.log(`[server] Serving frontend from ${clientDistPath}`);
