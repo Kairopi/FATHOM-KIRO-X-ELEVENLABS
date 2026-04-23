@@ -36,9 +36,10 @@ COPY --from=builder /app/public ./public
 
 # Set environment
 ENV NODE_ENV=production
+ENV PORT=10000
 
-# Expose port
-EXPOSE $PORT
+# Expose port (Render uses 10000)
+EXPOSE 10000
 
 # Start server
 CMD ["node", "server/dist/index.js"]

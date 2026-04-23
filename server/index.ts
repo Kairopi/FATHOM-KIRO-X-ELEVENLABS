@@ -1,6 +1,6 @@
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { existsSync, readFileSync, statSync } from 'fs';
+import { existsSync, readFileSync, statSync, readdirSync } from 'fs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -101,33 +101,49 @@ app.get('/api/health', (_req, res) => {
 // In Docker: Working dir is /app, server runs from /app/server/dist/index.js
 // So __dirname = /app/server/dist, and client/dist is at /app/client/dist
 const clientDistPath = path.resolve(process.cwd(), 'client', 'dist');
+console.log(`[server] ========== STATIC FILE SERVING DEBUG ==========`);
 console.log(`[server] process.cwd(): ${process.cwd()}`);
 console.log(`[server] __dirname: ${__dirname}`);
 console.log(`[server] Looking for client dist at: ${clientDistPath}`);
 console.log(`[server] Client dist exists: ${existsSync(clientDistPath)}`);
+
 if (existsSync(clientDistPath)) {
+  const indexPath = path.join(clientDistPath, 'index.html');
+  console.log(`[server] index.html exists: ${existsSync(indexPath)}`);
+  
   app.use(express.static(clientDistPath));
+  console.log(`[server] ✓ Mounted static middleware for: ${clientDistPath}`);
+  
   // SPA fallback — serve index.html for all non-API routes
-  // Use a function-based route handler for Express 5 compatibility
   app.use((_req, res, next) => {
     // Skip if it's an API route
     if (_req.path.startsWith('/api') || _req.path.startsWith('/audio')) {
       return next();
     }
-    res.sendFile(path.join(clientDistPath, 'index.html'));
+    console.log(`[server] SPA fallback serving index.html for: ${_req.path}`);
+    res.sendFile(indexPath);
   });
-  console.log(`[server] Serving frontend from ${clientDistPath}`);
+  console.log(`[server] ✓ Mounted SPA fallback handler`);
 } else {
-  console.warn(`[server] Client dist not found at ${clientDistPath}`);
+  console.error(`[server] ✗ Client dist NOT FOUND at ${clientDistPath}`);
+  console.error(`[server] Available files in process.cwd():`, existsSync(process.cwd()) ? readdirSync(process.cwd()) : 'N/A');
 }
 
 // Initialize database then start server
 async function start() {
+  console.log(`[server] ========== STARTING FATHOM SERVER ==========`);
+  console.log(`[server] NODE_ENV: ${process.env.NODE_ENV}`);
+  console.log(`[server] PORT: ${PORT}`);
+  console.log(`[server] ELEVENLABS_API_KEY: ${process.env.ELEVENLABS_API_KEY ? 'SET' : 'MISSING'}`);
+  console.log(`[server] DASHSCOPE_API_KEY: ${process.env.DASHSCOPE_API_KEY ? 'SET' : 'MISSING'}`);
+  
   await initDatabase();
   
   // Render requires binding to 0.0.0.0, not localhost
   app.listen(PORT, '0.0.0.0', () => {
-    console.log(`Fathom server running on http://0.0.0.0:${PORT}`);
+    console.log(`[server] ========================================`);
+    console.log(`[server] ✓ Fathom server running on http://0.0.0.0:${PORT}`);
+    console.log(`[server] ========================================`);
   });
 }
 
