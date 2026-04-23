@@ -9,11 +9,11 @@ export const STAGGER_FAST = 0.002;  // 2ms - waveform bars
 export const STAGGER_NORMAL = 0.04; // 40ms - list items, cards
 export const STAGGER_SLOW = 0.06;   // 60ms - large sections
 
-// Transition Durations
+// Transition Durations (in milliseconds)
 export const DURATION_INSTANT = 0;
-export const DURATION_FAST = 150;
-export const DURATION_NORMAL = 200;
-export const DURATION_SLOW = 400;
+export const DURATION_FAST = 250;      // Increased from 150ms
+export const DURATION_NORMAL = 350;    // Increased from 200ms  
+export const DURATION_SLOW = 450;      // Increased from 400ms
 export const DURATION_EXTRA_SLOW = 800;
 
 // Page transition variants — smooth opacity crossfade

@@ -46,7 +46,7 @@ export function SettingsScreen() {
                   transition={SPRING_SNAPPY}
                   aria-label={`Set default lens to ${meta.name}`} aria-pressed={isSelected}
                   onClick={() => setDefaultLens(isSelected ? null : lens)}
-                  className={cn('rounded-[var(--radius-pill)] px-4 py-2 text-xs font-medium border transition-all duration-200',
+                  className={cn('rounded-[var(--radius-pill)] px-4 py-2 text-xs font-medium border transition-all duration-300',
                     isSelected ? 'border-transparent' : 'border-[var(--border-primary)] hover:border-[var(--border-focus)]'
                   )}
                   style={isSelected
@@ -91,7 +91,7 @@ export function SettingsScreen() {
                   transition={SPRING_SNAPPY}
                   aria-label={`Set playback speed to ${speed}x`} aria-pressed={isSelected}
                   onClick={() => setPlaybackSpeed(speed)}
-                  className={cn('rounded-[var(--radius-button)] px-4 py-2 text-xs font-medium border transition-all duration-200',
+                  className={cn('rounded-[var(--radius-button)] px-4 py-2 text-xs font-medium border transition-all duration-300',
                     isSelected
                       ? 'bg-[var(--accent-primary)] text-white border-transparent shadow-lg shadow-[var(--accent-primary)]/20'
                       : 'bg-[var(--bg-tertiary)] text-[var(--text-secondary)] border-[var(--border-primary)] hover:border-[var(--border-focus)]'

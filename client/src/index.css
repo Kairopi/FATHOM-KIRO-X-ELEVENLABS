@@ -74,6 +74,11 @@
   --radius-pill: 9999px;
   --radius-small: 4px;
 
+  /* Transition Durations — smooth, polished feel */
+  --duration-fast: 250ms;
+  --duration-normal: 350ms;
+  --duration-slow: 450ms;
+
   /* Spacing */
   --space-1: 4px;
   --space-2: 8px;

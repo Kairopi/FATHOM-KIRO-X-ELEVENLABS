@@ -124,7 +124,7 @@ export function PlayerScreen() {
   const lensMeta = getLensMetadata(track.lens);
 
   return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }}
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.4, ease: [0.25, 0.1, 0.25, 1.0] }}
       className="flex flex-col gap-5 py-2 relative">
 
       {/* Lens wash */}
@@ -218,7 +218,7 @@ export function PlayerScreen() {
           <button key={key} type="button" onClick={() => setActiveTab(key)}
             aria-selected={activeTab === key} role="tab"
             className={cn(
-              'px-5 py-2.5 text-sm font-medium transition-all duration-200 relative',
+              'px-5 py-2.5 text-sm font-medium transition-all duration-300 relative',
               'focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--border-focus)]',
               activeTab === key ? 'text-[var(--text-primary)]' : 'text-[var(--text-tertiary)] hover:text-[var(--text-secondary)]'
             )}>
@@ -226,7 +226,7 @@ export function PlayerScreen() {
             {activeTab === key && (
               <motion.div layoutId="tab-indicator" className="absolute bottom-0 left-0 right-0 h-0.5 rounded-full"
                 style={{ backgroundColor: lensMeta.accentColor }}
-                transition={{ type: 'spring', stiffness: 500, damping: 30 }} />
+                transition={{ type: 'spring', stiffness: 260, damping: 30 }} />
             )}
           </button>
         ))}
@@ -236,14 +236,14 @@ export function PlayerScreen() {
       <AnimatePresence mode="wait">
         {activeTab === 'transcript' && (
           <motion.div key="transcript" initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -6 }} transition={{ duration: 0.2 }}>
+            exit={{ opacity: 0, y: -6 }} transition={{ duration: 0.35, ease: [0.25, 0.1, 0.25, 1.0] }}>
             <TranscriptView transcript={track.transcript} currentTime={currentTime} onSeek={handleSeek} />
           </motion.div>
         )}
 
         {activeTab === 'info' && (
           <motion.div key="info" initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -6 }} transition={{ duration: 0.2 }}
+            exit={{ opacity: 0, y: -6 }} transition={{ duration: 0.35, ease: [0.25, 0.1, 0.25, 1.0] }}
             className="flex flex-col gap-5 p-5 bg-[var(--bg-secondary)] rounded-xl border border-[var(--border-primary)]">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-lg flex items-center justify-center"

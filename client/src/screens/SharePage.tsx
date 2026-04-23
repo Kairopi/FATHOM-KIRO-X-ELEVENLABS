@@ -136,7 +136,7 @@ export function SharePage() {
               transition={SPRING_SNAPPY}
               onClick={handleCopyShareLink}
               aria-label="Copy share link"
-              className="flex items-center gap-2 px-4 py-2 text-xs font-medium bg-transparent hover:bg-[var(--bg-tertiary)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] border border-[var(--border-primary)] rounded-[var(--radius-button)] transition-all duration-200"
+              className="flex items-center gap-2 px-4 py-2 text-xs font-medium bg-transparent hover:bg-[var(--bg-tertiary)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] border border-[var(--border-primary)] rounded-[var(--radius-button)] transition-all duration-300"
             >
               <Share2 className="w-4 h-4" strokeWidth={2} />
               <span>Share</span>
