@@ -31,7 +31,7 @@ export function BottomTabBar() {
             aria-label={label}
             aria-current={isActive ? 'page' : undefined}
             className={cn(
-              'flex flex-col items-center justify-center gap-1 min-w-[56px] min-h-[48px] py-2 px-3 rounded-xl transition-all duration-150',
+              'flex flex-col items-center justify-center gap-1 min-w-[56px] min-h-[48px] py-2 px-3 rounded-xl',
               isActive
                 ? 'text-[var(--accent)]'
                 : 'text-[var(--text-tertiary)] active:text-[var(--text-secondary)]'

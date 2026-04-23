@@ -113,10 +113,14 @@ export function PlayerScreen() {
     return (
       <div className="flex flex-col items-center justify-center gap-4 py-24">
         <p className="text-sm text-[var(--text-secondary)]">Track not found</p>
-        <button type="button" onClick={() => navigate('/')}
+        <motion.button type="button" 
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+          transition={SPRING_SNAPPY}
+          onClick={() => navigate('/')}
           className="px-4 py-2 text-sm bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white rounded-full transition-colors">
           Go Home
-        </button>
+        </motion.button>
       </div>
     );
   }
@@ -153,7 +157,7 @@ export function PlayerScreen() {
         </div>
         <motion.button type="button" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
           transition={SPRING_SNAPPY} onClick={handleShare} aria-label="Share track"
-          className="shrink-0 w-10 h-10 flex items-center justify-center rounded-full hover:bg-[var(--bg-tertiary)] text-[var(--text-tertiary)] hover:text-[var(--text-secondary)] transition-colors">
+          className="shrink-0 min-w-[48px] min-h-[48px] sm:w-10 sm:h-10 flex items-center justify-center rounded-full hover:bg-[var(--bg-tertiary)] text-[var(--text-tertiary)] hover:text-[var(--text-secondary)] transition-colors">
           <Share2 className="w-4 h-4" strokeWidth={2} />
         </motion.button>
       </motion.div>
@@ -179,7 +183,7 @@ export function PlayerScreen() {
           <motion.button type="button" whileTap={{ scale: 0.95 }} transition={SPRING_SNAPPY}
             onClick={() => playPauseRef.current?.()}
             aria-label={isPlaying ? 'Pause' : 'Play'}
-            className="shrink-0 w-9 h-9 flex items-center justify-center rounded-full text-white"
+            className="shrink-0 min-w-[48px] min-h-[48px] sm:w-9 sm:h-9 flex items-center justify-center rounded-full text-white"
             style={{ backgroundColor: lensMeta.accentColor }}>
             {isPlaying
               ? <Pause className="w-4 h-4" strokeWidth={2.5} />
@@ -215,10 +219,17 @@ export function PlayerScreen() {
       {/* Tabs */}
       <div className="flex gap-0 border-b border-[var(--border-primary)]" role="tablist" aria-label="Player tabs">
         {TABS.map(({ key, label }) => (
-          <button key={key} type="button" onClick={() => setActiveTab(key)}
-            aria-selected={activeTab === key} role="tab"
+          <motion.button key={key} type="button" 
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            transition={SPRING_SNAPPY}
+            onClick={() => setActiveTab(key)}
+            id={`tab-${key}`}
+            aria-selected={activeTab === key} 
+            aria-controls={`tabpanel-${key}`}
+            role="tab"
             className={cn(
-              'px-5 py-2.5 text-sm font-medium transition-all duration-300 relative',
+              'px-5 min-h-[48px] sm:py-2.5 text-sm font-medium transition-all duration-300 relative flex items-center',
               'focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--border-focus)]',
               activeTab === key ? 'text-[var(--text-primary)]' : 'text-[var(--text-tertiary)] hover:text-[var(--text-secondary)]'
             )}>
@@ -228,15 +239,28 @@ export function PlayerScreen() {
                 style={{ backgroundColor: lensMeta.accentColor }}
                 transition={{ type: 'spring', stiffness: 260, damping: 30 }} />
             )}
-          </button>
+          </motion.button>
         ))}
+      </div>
+
+      {/* Screen reader announcements */}
+      <div role="status" aria-live="polite" className="sr-only">
+        {isPlaying ? 'Playing' : 'Paused'}
+      </div>
+      <div role="status" aria-live="polite" className="sr-only">
+        {activeTab === 'player' && 'Player tab selected'}
+        {activeTab === 'transcript' && 'Transcript tab selected'}
+        {activeTab === 'info' && 'Info tab selected'}
       </div>
 
       {/* Tab content */}
       <AnimatePresence mode="wait">
         {activeTab === 'transcript' && (
           <motion.div key="transcript" initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -6 }} transition={{ duration: 0.35, ease: [0.25, 0.1, 0.25, 1.0] }}>
+            exit={{ opacity: 0, y: -6 }} transition={{ duration: 0.35, ease: [0.25, 0.1, 0.25, 1.0] }}
+            role="tabpanel" 
+            id="tabpanel-transcript"
+            aria-labelledby="tab-transcript">
             <TranscriptView transcript={track.transcript} currentTime={currentTime} onSeek={handleSeek} />
           </motion.div>
         )}
@@ -244,6 +268,9 @@ export function PlayerScreen() {
         {activeTab === 'info' && (
           <motion.div key="info" initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -6 }} transition={{ duration: 0.35, ease: [0.25, 0.1, 0.25, 1.0] }}
+            role="tabpanel" 
+            id="tabpanel-info"
+            aria-labelledby="tab-info"
             className="flex flex-col gap-5 p-5 bg-[var(--bg-secondary)] rounded-xl border border-[var(--border-primary)]">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-lg flex items-center justify-center"

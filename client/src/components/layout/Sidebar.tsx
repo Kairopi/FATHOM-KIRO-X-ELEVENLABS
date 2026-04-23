@@ -55,7 +55,7 @@ export function Sidebar() {
                 aria-label={label}
                 aria-current={isActive ? 'page' : undefined}
                 className={cn(
-                  'relative flex items-center gap-1.5 px-3 py-1.5 rounded-md transition-all duration-100',
+                  'relative flex items-center gap-1.5 px-3 py-1.5 rounded-md',
                   'focus:outline-none focus-visible:outline-2 focus-visible:outline-[var(--border-focus)] focus-visible:outline-offset-2',
                   isActive
                     ? 'text-[var(--text-primary)] bg-[var(--bg-tertiary)]'
