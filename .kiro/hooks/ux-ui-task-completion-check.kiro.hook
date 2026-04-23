@@ -1,0 +1,14 @@
+{
+  "enabled": true,
+  "name": "UX/UI Task Completion Validation",
+  "description": "Comprehensive validation before marking any UX/UI task as complete. Ensures all S-tier requirements are met.",
+  "version": "1",
+  "when": {
+    "type": "preToolUse",
+    "toolTypes": ["spec"]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "Before marking this task complete, run comprehensive validation:\n\n**CRITICAL CHECKS:**\n1. Read the modified files to verify implementation\n2. Check for gradients (NONE allowed except shimmer)\n3. Verify colors use CSS variables (no hardcoded hex)\n4. Verify typography uses clamp() or CSS classes\n5. Verify buttons have 4-state system (hover, tap, disabled)\n6. Verify animations use SPRING_SNAPPY\n7. Verify skeleton screens (not spinners)\n8. Verify 48px touch targets on mobile\n9. Verify 3px focus indicators\n10. Verify ARIA labels on icon buttons\n\n**COMPONENT-SPECIFIC CHECKS:**\n- Waveform: 2px bars, 1px gap, sine wave, flat color\n- Voice Button: 140px diameter, 48px icon, pulsing animation\n- Lens Cards: Unique border patterns, 48px icons, 5% opacity backgrounds\n- Skeletons: Lens-colored shimmer, 2s animation\n\nIf ANY check fails, DO NOT mark complete. Fix issues first, then validate again.\n\nOnly respond 'VALIDATION PASSED' if all checks pass."
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "enabled": true,
+  "name": "UX/UI Pre-Commit Quality Check",
+  "description": "Comprehensive quality check before committing UX/UI changes. Runs all critical validations to ensure S-tier standards.",
+  "version": "1",
+  "when": {
+    "type": "userTriggered"
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "Run comprehensive UX/UI quality check:\n\n1. GRADIENTS: Search for linear-gradient/radial-gradient in CSS/TSX (except shimmer animations)\n2. TYPOGRAPHY: Verify all text uses clamp() or CSS classes (no fixed font-size)\n3. COLORS: Verify all colors use CSS variables (no hardcoded hex)\n4. BUTTONS: Check all buttons have 4-state system (hover, tap, disabled)\n5. ANIMATIONS: Verify all animations use transform/opacity only (no layout properties)\n6. WAVEFORM: If WaveformPlayer modified, verify 2px bars, 1px gap, sine wave\n7. VOICE BUTTON: If VoiceInputButton modified, verify 140px diameter, 48px icon\n8. LENS CARDS: If LensPickerDialog modified, verify unique border patterns\n9. SKELETONS: Verify loading states use skeleton screens (not spinners)\n10. ACCESSIBILITY: Check for aria-labels, 3px focus indicators\n11. MOBILE: Verify 48px touch targets on mobile\n12. PERFORMANCE: Check for layout-triggering animations\n\nReport all issues found with file locations. If all checks pass, confirm 'UX/UI quality check PASSED'."
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "enabled": true,
+  "name": "UX/UI Button 4-State System",
+  "description": "Ensure all buttons implement the mandatory 4-state system: rest, hover (scale 1.02), active (scale 0.98), disabled (opacity 0.4). Critical for S-tier polish.",
+  "version": "1",
+  "when": {
+    "type": "fileEdited",
+    "patterns": [
+      "client/src/**/*.tsx"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "Check the edited file for button elements. Every button MUST have: 1) whileHover={{ scale: 1.02 }}, 2) whileTap={{ scale: 0.98 }}, 3) transition={SPRING_SNAPPY}, 4) disabled state with opacity-40. If any button is missing these states, add them. Report what you found and fixed."
+  }
+}

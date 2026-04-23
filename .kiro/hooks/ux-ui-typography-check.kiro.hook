@@ -1,0 +1,17 @@
+{
+  "enabled": true,
+  "name": "UX/UI Typography Fluid Scaling",
+  "description": "Ensure all text uses clamp() functions for fluid responsive scaling. Prevents fixed font sizes that break on different screen sizes.",
+  "version": "1",
+  "when": {
+    "type": "fileEdited",
+    "patterns": [
+      "client/src/**/*.css",
+      "client/src/**/*.tsx"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "Check the edited file for font-size declarations. ALL font sizes must use either: 1) CSS classes (.text-display, .text-h1, .text-h2, .text-h3, .text-body, .text-caption), or 2) clamp() functions. If you find fixed font sizes (e.g., font-size: 24px), replace them with appropriate clamp() or CSS class. Report findings."
+  }
+}

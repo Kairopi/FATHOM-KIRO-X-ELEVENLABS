@@ -1,0 +1,16 @@
+{
+  "enabled": true,
+  "name": "UX/UI Accessibility Check",
+  "description": "Verify accessibility requirements: 3px focus indicators, ARIA labels on icon buttons, and proper semantic HTML. Ensures WCAG AA compliance.",
+  "version": "1",
+  "when": {
+    "type": "fileEdited",
+    "patterns": [
+      "client/src/**/*.tsx"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "Check the edited component for accessibility issues: 1) All icon-only buttons must have aria-label, 2) Interactive elements must have proper focus states (3px outline), 3) State changes should have aria-live announcements, 4) Buttons must have aria-pressed when toggleable. If you find missing accessibility attributes, add them. Report what you found and fixed."
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "enabled": true,
+  "name": "UX/UI Voice Button Hero Specs",
+  "description": "Ensure voice input button meets hero feature specs: 140px diameter, 48px icon, pulsing animation, animated ring when recording.",
+  "version": "1",
+  "when": {
+    "type": "fileEdited",
+    "patterns": [
+      "client/src/components/home/VoiceInputButton.tsx"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "Check VoiceInputButton for hero specs: 1) Button MUST be 140px diameter (NOT 80px), 2) Icon MUST be 48px (w-12 h-12), 3) Idle state MUST have pulsing animation (scale: [1, 1.05, 1], 2s infinite), 4) Recording state MUST show animated ring (4px stroke, rotating 360deg), 5) Transcription MUST reveal word-by-word (50ms stagger). If any spec is wrong, fix it. Report findings."
+  }
+}

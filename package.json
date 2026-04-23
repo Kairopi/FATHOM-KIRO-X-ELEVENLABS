@@ -1,0 +1,17 @@
+{
+  "name": "fathom",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Fathom — Hyper-personalized audio learning engine",
+  "scripts": {
+    "dev": "concurrently \"npm run dev:client\" \"npm run dev:server\"",
+    "dev:client": "npm run dev --prefix client",
+    "dev:server": "npm run dev --prefix server",
+    "build": "npm run build --prefix client && echo Build complete",
+    "start": "npx tsx server/index.ts",
+    "install:all": "npm install && npm install --prefix client && npm install --prefix server"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}

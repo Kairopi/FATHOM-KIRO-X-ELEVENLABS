@@ -1,0 +1,242 @@
+@import "tailwindcss";
+
+/* Geist Sans — variable font */
+@font-face {
+  font-family: 'Geist Sans';
+  src: url('/fonts/GeistSans-Variable.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Geist Mono — variable font */
+@font-face {
+  font-family: 'Geist Mono';
+  src: url('/fonts/GeistMono-Variable.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  /* Font families */
+  --font-sans: 'Geist Sans', 'Inter', -apple-system, 'Segoe UI', system-ui, sans-serif;
+  --font-mono: 'Geist Mono', 'Berkeley Mono', 'SF Mono', monospace;
+
+  /* Backgrounds — warm zinc darks, tighter elevation steps */
+  --bg-primary: #09090b;
+  --bg-secondary: #111113;
+  --bg-tertiary: #191919;
+  --bg-elevated: #1f1f22;
+
+  /* Borders — subtle, creates depth through layering */
+  --border-primary: rgba(255, 255, 255, 0.07);
+  --border-secondary: rgba(255, 255, 255, 0.04);
+  --border-focus: rgba(139, 92, 246, 0.5);
+
+  /* Text — 4-level hierarchy */
+  --text-primary: #ededef;
+  --text-secondary: #9898a0;
+  --text-tertiary: #5f5f68;
+  --text-muted: #3e3e45;
+
+  /* Primary Accent — purple, used sparingly */
+  --accent-primary: #8B5CF6;
+  --accent-hover: #A78BFA;
+  --accent-active: #7C3AED;
+  --accent: #8B5CF6;
+  --accent-muted: rgba(139, 92, 246, 0.10);
+
+  /* Secondary Accent */
+  --accent-secondary: #F59E0B;
+  --accent-secondary-hover: #FBBF24;
+
+  /* Semantic */
+  --success: #22C55E;
+  --warning: #EAB308;
+  --error: #EF4444;
+
+  /* Lens Colors */
+  --lens-gamer: #8B5CF6;
+  --lens-coach: #10B981;
+  --lens-eli5: #F59E0B;
+  --lens-storyteller: #F97316;
+  --lens-scientist: #3B82F6;
+  --lens-popculture: #EC4899;
+  --lens-chef: #F97316;
+  --lens-streetsmart: #6B7280;
+
+  /* Radius — tighter, more professional */
+  --radius-card: 10px;
+  --radius-button: 6px;
+  --radius-pill: 9999px;
+  --radius-small: 4px;
+
+  /* Spacing */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-20: 80px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font-sans);
+  font-weight: 400;
+  letter-spacing: -0.011em;
+  line-height: 1.5;
+  font-size: 14px;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* ── Typography Scale — tighter, denser, more professional ── */
+.text-display {
+  font-size: clamp(28px, 4vw, 42px);
+  font-weight: 700;
+  letter-spacing: -0.035em;
+  line-height: 1.1;
+}
+
+.text-h1 {
+  font-size: clamp(22px, 3vw, 30px);
+  font-weight: 650;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+}
+
+.text-h2 {
+  font-size: clamp(18px, 2.2vw, 24px);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.text-h3 {
+  font-size: clamp(15px, 1.8vw, 18px);
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  line-height: 1.25;
+}
+
+.text-body {
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: -0.011em;
+  line-height: 1.5;
+}
+
+.text-caption {
+  font-size: 10px;
+  font-weight: 550;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  line-height: 1;
+}
+
+h1 { font-weight: 650; letter-spacing: -0.03em; line-height: 1.15; }
+h2 { font-weight: 600; letter-spacing: -0.02em; line-height: 1.25; }
+h3 { font-weight: 600; letter-spacing: -0.015em; line-height: 1.3; }
+
+/* ── Animations ── */
+@keyframes generating-pulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
+}
+
+@keyframes equalizer-bounce {
+  0%, 100% { height: 4px; }
+  50% { height: 16px; }
+}
+
+@keyframes generating-shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.equalizer-bar { animation: equalizer-bounce 0.8s ease-in-out infinite; }
+.generating-circle { animation: generating-pulse 2.5s ease-in-out infinite; }
+.generating-circle--error { animation: none; opacity: 1; transform: scale(0.9); }
+.generating-shimmer { animation: generating-shimmer 2s linear infinite; }
+
+/* ── Touch targets ── */
+@media (max-width: 767px) {
+  .touch-target-expand { position: relative; min-width: 48px; min-height: 48px; }
+}
+@media (min-width: 768px) {
+  .touch-target-expand { min-width: 40px; min-height: 40px; }
+}
+
+/* ── Focus ── */
+*:focus-visible {
+  outline: 2px solid var(--border-focus);
+  outline-offset: 2px;
+}
+*:focus:not(:focus-visible) { outline: none; }
+
+/* ── Utilities ── */
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border-width: 0;
+}
+
+.audio-error-fallback {
+  display: flex; align-items: center; justify-content: center; padding: 16px;
+  border-radius: var(--radius-card); background-color: var(--bg-tertiary);
+  border: 1px solid var(--border-primary); color: var(--text-secondary); font-size: clamp(13px, 1vw + 1px, 14px);
+}
+
+/* ── Reduced motion ── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ── Selection ── */
+::selection {
+  background: rgba(139, 92, 246, 0.3);
+  color: var(--text-primary);
+}
+
+/* ── Subtle noise texture for premium feel ── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.012;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 256px 256px;
+}
+
+/* ── Scrollbar (webkit) ── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border-primary); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.12); }

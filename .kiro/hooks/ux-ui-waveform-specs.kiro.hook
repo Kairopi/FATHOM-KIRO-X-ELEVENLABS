@@ -1,0 +1,16 @@
+{
+  "enabled": true,
+  "name": "UX/UI Waveform Specifications",
+  "description": "Ensure waveform implementation meets S-tier specs: 2px bars, 1px gap, sine wave algorithm, lens accent color (flat), 2ms stagger animation.",
+  "version": "1",
+  "when": {
+    "type": "fileEdited",
+    "patterns": [
+      "client/src/components/player/WaveformPlayer.tsx"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "Check WaveformPlayer for S-tier specs: 1) Bar width MUST be 2px (NOT 4px), 2) Bar gap MUST be 1px (NOT 2px), 3) Heights MUST use sine wave algorithm (baseHeight + amplitude * sin(index * frequency)), NOT random, 4) Bar color MUST be flat lens accent (NO gradients), 5) Stagger animation MUST use 0.002 (2ms) delay, 6) Container height: 80px mobile, 120px desktop. If any spec is wrong, fix it immediately. Report findings."
+  }
+}

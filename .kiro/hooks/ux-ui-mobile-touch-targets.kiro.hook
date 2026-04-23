@@ -1,0 +1,16 @@
+{
+  "enabled": true,
+  "name": "UX/UI Mobile Touch Targets",
+  "description": "Ensure all interactive elements have 48px minimum touch targets on mobile. Critical for mobile usability.",
+  "version": "1",
+  "when": {
+    "type": "fileEdited",
+    "patterns": [
+      "client/src/**/*.tsx"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "Check the edited file for interactive elements (buttons, links, inputs). On mobile (<768px), ALL interactive elements MUST have minimum 48px height and width. Use Tailwind classes: min-h-[48px] min-w-[48px] sm:min-h-[40px] sm:min-w-[40px]. If you find interactive elements smaller than 48px on mobile, fix them. Report findings."
+  }
+}

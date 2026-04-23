@@ -1,0 +1,18 @@
+{
+  "enabled": true,
+  "name": "UX/UI Gradient Check",
+  "description": "Prevent gradients from being added to CSS/TSX files (except shimmer animations). Enforces the NO GRADIENTS rule for S-tier UX/UI upgrade.",
+  "version": "1",
+  "when": {
+    "type": "fileEdited",
+    "patterns": [
+      "client/src/**/*.css",
+      "client/src/**/*.tsx",
+      "client/src/**/*.ts"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "Check the edited file for any linear-gradient or radial-gradient usage. The ONLY allowed gradients are shimmer animations with pattern: linear-gradient(90deg, transparent, rgba(...), transparent). If you find ANY other gradient, remove it immediately and replace with flat colors. Report what you found and fixed."
+  }
+}

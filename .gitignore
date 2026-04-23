@@ -1,0 +1,38 @@
+# Environment variables — NEVER commit API keys
+.env
+.env.local
+.env.production
+
+# Dependencies
+node_modules/
+
+# Build output
+client/dist/
+server/dist/
+
+# Database
+*.db
+fathom.db
+
+# Generated audio files (large, regenerated on demand)
+public/audio/tracks/
+public/audio/soundscapes/
+public/audio/music/
+public/audio/interrupts/
+public/audio/previews/voice_*
+public/audio/temp/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# TypeScript build info
+*.tsbuildinfo
+
+# Logs
+*.log
+npm-debug.log*

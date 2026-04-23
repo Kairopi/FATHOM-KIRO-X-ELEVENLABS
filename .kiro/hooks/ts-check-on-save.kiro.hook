@@ -1,0 +1,17 @@
+{
+  "enabled": true,
+  "name": "TypeScript Check on Save",
+  "description": "After any TypeScript or TSX file is edited, automatically check for type errors and fix them before moving on",
+  "version": "1",
+  "when": {
+    "type": "fileEdited",
+    "patterns": [
+      "**/*.ts",
+      "**/*.tsx"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "Check the edited file for TypeScript diagnostics using getDiagnostics. If there are errors, fix them immediately. If clean, continue silently."
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "enabled": true,
+  "name": "UX/UI Lens Color Variables",
+  "description": "Ensure lens colors use correct CSS variable names from temperature system. Prevents hardcoded colors and wrong variable names.",
+  "version": "1",
+  "when": {
+    "type": "fileEdited",
+    "patterns": [
+      "client/src/**/*.tsx",
+      "client/src/**/*.ts",
+      "client/src/**/*.css"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "Check the edited file for lens color usage. Verify: 1) Lens colors use CSS variables (--lens-storytelling, --lens-eli5, --lens-analogies, --lens-deepdive, --lens-socratic, --lens-quicksummary, --lens-explainsimply, --lens-debate), 2) NO hardcoded hex colors for lenses, 3) Lens backgrounds use 5% opacity (${accent}0D for hex, or rgba with 0.05 alpha). If you find hardcoded colors or wrong variable names, fix them. Report findings."
+  }
+}

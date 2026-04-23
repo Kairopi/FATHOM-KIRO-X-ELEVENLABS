@@ -1,0 +1,16 @@
+{
+  "enabled": true,
+  "name": "UX/UI Skeleton Loading States",
+  "description": "Ensure all loading states use skeleton screens (NOT spinners) with lens-colored shimmer. Critical for premium feel.",
+  "version": "1",
+  "when": {
+    "type": "fileEdited",
+    "patterns": [
+      "client/src/**/*.tsx"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "Check the edited file for loading states. ALL loading states MUST: 1) Use skeleton screens (NOT spinners or 'Loading...' text), 2) Import from @/components/ui/skeleton, 3) Pass lensAccent prop when lens context available, 4) Use lens-colored shimmer (5% opacity). If you find spinners or generic loading text, replace with appropriate skeleton component. Report findings."
+  }
+}
