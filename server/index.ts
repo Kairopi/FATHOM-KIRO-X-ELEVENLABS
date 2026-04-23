@@ -63,7 +63,7 @@ import lensPreviewRoutes from './routes/lens-previews.js';
 import voicePreviewRoutes from './routes/voice-preview.js';
 
 const app = express();
-const PORT = process.env.PORT || 3001;
+const PORT: number = parseInt(process.env.PORT || '3001', 10);
 
 // Middleware
 app.use(cors());
