@@ -1,7 +1,8 @@
 // Shared Framer Motion spring configs
-export const SPRING_SNAPPY = { type: "spring" as const, stiffness: 350, damping: 25 };
-export const SPRING_GENTLE = { type: "spring" as const, stiffness: 300, damping: 25 };
-export const SPRING_SLOW = { type: "spring" as const, stiffness: 200, damping: 20 };
+// Reduced stiffness and increased damping for smoother, less bouncy animations
+export const SPRING_SNAPPY = { type: "spring" as const, stiffness: 260, damping: 30 };
+export const SPRING_GENTLE = { type: "spring" as const, stiffness: 200, damping: 28 };
+export const SPRING_SLOW = { type: "spring" as const, stiffness: 150, damping: 25 };
 
 // Stagger Timings
 export const STAGGER_FAST = 0.002;  // 2ms - waveform bars
@@ -16,13 +17,18 @@ export const DURATION_SLOW = 400;
 export const DURATION_EXTRA_SLOW = 800;
 
 // Page transition variants — smooth opacity crossfade
+// Industry standard: 400-500ms for page transitions (Material Design, iOS HIG)
 export const PAGE_VARIANTS = {
   initial: { opacity: 0 },
   animate: { opacity: 1 },
   exit: { opacity: 0 },
 } as const;
 
-export const PAGE_TRANSITION = { duration: 0.3, ease: [0.4, 0.0, 0.2, 1] } as const; // Smooth easing curve
+// Using 450ms with smooth easing curve for polished feel
+export const PAGE_TRANSITION = { 
+  duration: 0.45, 
+  ease: [0.25, 0.1, 0.25, 1.0] // Standard easeInOut cubic-bezier
+} as const;
 
 // Staggered list container
 export const STAGGER_CONTAINER = {
