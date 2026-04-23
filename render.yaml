@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: fathom
+    env: node
+    region: oregon
+    plan: free
+    buildCommand: npm ci && npm ci --prefix client && npm ci --prefix server && npm run build
+    startCommand: npm run start
+    envVars:
+      - key: NODE_VERSION
+        value: 18.18.0
+      - key: ELEVENLABS_API_KEY
+        sync: false
+      - key: DASHSCOPE_API_KEY
+        sync: false
+      - key: ACCESS_CODE
+        value: JUDGE2024
