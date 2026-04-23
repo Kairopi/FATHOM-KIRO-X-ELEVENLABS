@@ -1,9 +1,11 @@
 import { useRef, useEffect, useCallback, useState } from 'react';
+import WaveSurfer from 'wavesurfer.js';
 import { useStore } from '@/store';
 
 interface UseAudioPlayerOptions {
   containerRef: React.RefObject<HTMLElement | null>;
   url: string | undefined;
+  lensAccentColor?: string;
 }
 
 interface UseAudioPlayerReturn {
@@ -18,112 +20,99 @@ interface UseAudioPlayerReturn {
   skipBackward: () => void;
   seekTo: (timeSec: number) => void;
   setSpeed: (rate: number) => void;
-  waveformHeights: number[];
-}
-
-// Generate waveform bar heights using sine wave algorithm (S-tier spec)
-function generateWaveformHeights(barCount: number): number[] {
-  const baseHeight = 0.3;  // 30% of container
-  const amplitude = 0.4;   // 40% variation
-  const frequency = 0.1;   // Wave frequency
-  
-  return Array.from({ length: barCount }, (_, index) => {
-    const height = baseHeight + amplitude * Math.sin(index * frequency);
-    return Math.max(0.1, Math.min(1, height)); // Clamp between 10% and 100%
-  });
 }
 
 export function useAudioPlayer({
   containerRef,
   url,
+  lensAccentColor = '#8B5CF6',
 }: UseAudioPlayerOptions): UseAudioPlayerReturn {
-  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const wavesurferRef = useRef<WaveSurfer | null>(null);
   const [isReady, setIsReady] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
-  const [waveformHeights, setWaveformHeights] = useState<number[]>([]);
 
   const isPlaying = useStore((s) => s.isPlaying);
   const setIsPlaying = useStore((s) => s.setIsPlaying);
   const playbackSpeed = useStore((s) => s.playbackSpeed);
 
-  // Initialize audio element and generate sine wave waveform
+  // Initialize WaveSurfer
   useEffect(() => {
-    if (!url) return;
+    if (!containerRef.current || !url) return;
 
-    const audio = new Audio(url);
-    audioRef.current = audio;
+    const ws = WaveSurfer.create({
+      container: containerRef.current,
+      waveColor: `${lensAccentColor}40`, // 25% opacity
+      progressColor: lensAccentColor,
+      cursorColor: lensAccentColor,
+      barWidth: 2,
+      barGap: 1,
+      barRadius: 2,
+      height: 120,
+      normalize: true,
+      backend: 'WebAudio',
+    });
 
-    // Generate sine wave waveform (S-tier spec)
-    const containerWidth = containerRef.current?.clientWidth || 800;
-    const barCount = Math.floor(containerWidth / 3); // 2px bar + 1px gap = 3px per bar
-    const heights = generateWaveformHeights(barCount);
-    setWaveformHeights(heights);
+    wavesurferRef.current = ws;
 
-    audio.addEventListener('loadedmetadata', () => {
+    ws.load(url);
+
+    ws.on('ready', () => {
       setIsReady(true);
-      setDuration(audio.duration);
-      audio.playbackRate = playbackSpeed;
+      setDuration(ws.getDuration());
+      ws.setPlaybackRate(playbackSpeed);
     });
 
-    audio.addEventListener('timeupdate', () => {
-      setCurrentTime(audio.currentTime);
+    ws.on('audioprocess', () => {
+      setCurrentTime(ws.getCurrentTime());
       // Also push to store for MiniPlayer progress
-      useStore.getState().setCurrentTime(audio.currentTime);
+      useStore.getState().setCurrentTime(ws.getCurrentTime());
     });
 
-    audio.addEventListener('play', () => {
+    ws.on('play', () => {
       setIsPlaying(true);
     });
 
-    audio.addEventListener('pause', () => {
+    ws.on('pause', () => {
       setIsPlaying(false);
     });
 
-    audio.addEventListener('ended', () => {
+    ws.on('finish', () => {
       setIsPlaying(false);
     });
 
     return () => {
-      audio.pause();
-      audio.src = '';
-      audioRef.current = null;
+      ws.destroy();
+      wavesurferRef.current = null;
       setIsReady(false);
       setCurrentTime(0);
       setDuration(0);
-      setWaveformHeights([]);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [url, containerRef]);
+  }, [url, containerRef, lensAccentColor]);
 
   // Sync playback speed when it changes in the store
   useEffect(() => {
-    const audio = audioRef.current;
-    if (audio && isReady) {
-      audio.playbackRate = playbackSpeed;
+    const ws = wavesurferRef.current;
+    if (ws && isReady) {
+      ws.setPlaybackRate(playbackSpeed);
     }
   }, [playbackSpeed, isReady]);
 
-  // Listen for global keyboard shortcut events (Req 8.5, 8.6, 8.7)
+  // Listen for global keyboard shortcut events
   useEffect(() => {
     const handlePlayPause = () => {
-      const audio = audioRef.current;
-      if (!audio) return;
-      if (audio.paused) {
-        audio.play();
-      } else {
-        audio.pause();
-      }
+      wavesurferRef.current?.playPause();
     };
     const handleSkipForward = () => {
-      const audio = audioRef.current;
-      if (!audio) return;
-      audio.currentTime = Math.min(audio.currentTime + 15, audio.duration);
+      const ws = wavesurferRef.current;
+      if (!ws) return;
+      ws.setTime(Math.min(ws.getCurrentTime() + 15, ws.getDuration()));
     };
     const handleSkipBackward = () => {
-      const audio = audioRef.current;
-      if (!audio) return;
-      audio.currentTime = Math.max(audio.currentTime - 15, 0);
+      const ws = wavesurferRef.current;
+      if (!ws) return;
+      ws.setTime(Math.max(ws.getCurrentTime() - 15, 0));
     };
 
     window.addEventListener('fathom:play-pause', handlePlayPause);
@@ -137,39 +126,33 @@ export function useAudioPlayer({
   }, []);
 
   const playPause = useCallback(() => {
-    const audio = audioRef.current;
-    if (!audio) return;
-    if (audio.paused) {
-      audio.play();
-    } else {
-      audio.pause();
-    }
+    wavesurferRef.current?.playPause();
   }, []);
 
   const play = useCallback(() => {
-    audioRef.current?.play();
+    wavesurferRef.current?.play();
   }, []);
 
   const pause = useCallback(() => {
-    audioRef.current?.pause();
+    wavesurferRef.current?.pause();
   }, []);
 
   const skipForward = useCallback(() => {
-    const audio = audioRef.current;
-    if (!audio) return;
-    audio.currentTime = Math.min(audio.currentTime + 15, audio.duration);
+    const ws = wavesurferRef.current;
+    if (!ws) return;
+    ws.setTime(Math.min(ws.getCurrentTime() + 15, ws.getDuration()));
   }, []);
 
   const skipBackward = useCallback(() => {
-    const audio = audioRef.current;
-    if (!audio) return;
-    audio.currentTime = Math.max(audio.currentTime - 15, 0);
+    const ws = wavesurferRef.current;
+    if (!ws) return;
+    ws.setTime(Math.max(ws.getCurrentTime() - 15, 0));
   }, []);
 
   const seekTo = useCallback((timeSec: number) => {
-    const audio = audioRef.current;
-    if (!audio) return;
-    audio.currentTime = Math.max(0, Math.min(timeSec, audio.duration));
+    const ws = wavesurferRef.current;
+    if (!ws) return;
+    ws.setTime(Math.max(0, Math.min(timeSec, ws.getDuration())));
   }, []);
 
   const setSpeed = useCallback((rate: number) => {
@@ -189,6 +172,5 @@ export function useAudioPlayer({
     skipBackward,
     seekTo,
     setSpeed,
-    waveformHeights,
   };
 }
