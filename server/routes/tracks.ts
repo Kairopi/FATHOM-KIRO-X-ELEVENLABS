@@ -69,7 +69,7 @@ router.get('/', userMiddleware, (req, res) => {
   }
 });
 
-// GET /api/tracks/:id — single track
+// GET /api/tracks/:id — single track (accessible to all users in shared library)
 router.get('/:id', userMiddleware, (req, res) => {
   try {
     const id = req.params.id as string;
@@ -78,18 +78,20 @@ router.get('/:id', userMiddleware, (req, res) => {
       res.status(404).json({ error: 'Track not found' });
       return;
     }
-    if (track.user_id !== req.user!.id) {
-      res.status(403).json({ error: 'Track does not belong to this user' });
-      return;
-    }
-    res.json(trackToJson(track));
+    // In shared library mode, anyone can view/play any track
+    // Only deletion is restricted to owners
+    const trackData = {
+      ...trackToJson(track),
+      isOwner: track.user_id === req.user!.id,
+    };
+    res.json(trackData);
   } catch (err: any) {
     console.error('Error fetching track:', err);
     res.status(500).json({ error: 'Failed to fetch track' });
   }
 });
 
-// PATCH /api/tracks/:id/favorite — toggle favorite
+// PATCH /api/tracks/:id/favorite — toggle favorite (any user can favorite any track)
 router.patch('/:id/favorite', userMiddleware, (req, res) => {
   try {
     const id = req.params.id as string;
@@ -98,16 +100,19 @@ router.patch('/:id/favorite', userMiddleware, (req, res) => {
       res.status(404).json({ error: 'Track not found' });
       return;
     }
-    if (existing.user_id !== req.user!.id) {
-      res.status(403).json({ error: 'Track does not belong to this user' });
-      return;
-    }
+    // In shared library, users can favorite any track
+    // Note: This currently toggles the global favorite state
+    // TODO: Consider per-user favorites in the future
     const track = toggleFavorite(id);
     if (!track) {
       res.status(404).json({ error: 'Track not found' });
       return;
     }
-    res.json(trackToJson(track));
+    const trackData = {
+      ...trackToJson(track),
+      isOwner: track.user_id === req.user!.id,
+    };
+    res.json(trackData);
   } catch (err: any) {
     console.error('Error toggling favorite:', err);
     res.status(500).json({ error: 'Failed to toggle favorite' });
