@@ -221,7 +221,7 @@ export function WaveformPlayer({
                 initial={{ scale: 0, rotate: -90 }}
                 animate={{ scale: 1, rotate: 0 }}
                 exit={{ scale: 0, rotate: 90 }}
-                transition={{ duration: 0.2, ...SPRING_SNAPPY }}
+                transition={SPRING_SNAPPY}
               >
                 <Pause className="w-6 h-6" strokeWidth={2.5} />
               </motion.div>
@@ -231,7 +231,7 @@ export function WaveformPlayer({
                 initial={{ scale: 0, rotate: 90 }}
                 animate={{ scale: 1, rotate: 0 }}
                 exit={{ scale: 0, rotate: -90 }}
-                transition={{ duration: 0.2, ...SPRING_SNAPPY }}
+                transition={SPRING_SNAPPY}
               >
                 <Play className="w-6 h-6 ml-0.5" strokeWidth={2.5} />
               </motion.div>
@@ -251,6 +251,13 @@ export function WaveformPlayer({
         >
           <SkipForward className="w-5 h-5" strokeWidth={2} />
         </motion.button>
+      </div>
+
+      {/* Screen reader announcements for state changes */}
+      <div role="status" aria-live="polite" className="sr-only">
+        {isPlaying && "Audio playing"}
+        {!isPlaying && isReady && currentTime > 0 && "Audio paused"}
+        {playbackSpeed !== 1 && `Playback speed set to ${playbackSpeed}x`}
       </div>
 
       {/* Time display + speed selector */}
