@@ -7,7 +7,7 @@
     "dev": "concurrently \"npm run dev:client\" \"npm run dev:server\"",
     "dev:client": "npm run dev --prefix client",
     "dev:server": "npm run dev --prefix server",
-    "build": "npm install --prefix client && npm install --prefix server && npm run build --prefix client",
+    "build": "npm install --prefix client && npm install --prefix server && npm run build --prefix client && npm run build --prefix server",
     "start": "npx tsx server/index.ts",
     "install:all": "npm install && npm install --prefix client && npm install --prefix server",
     "postinstall": "cd client && npm rebuild @tailwindcss/oxide --force || true"
