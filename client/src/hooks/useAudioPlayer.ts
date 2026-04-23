@@ -40,6 +40,12 @@ export function useAudioPlayer({
   useEffect(() => {
     if (!containerRef.current || !url) return;
 
+    // Clean up any existing instance first
+    if (wavesurferRef.current) {
+      wavesurferRef.current.destroy();
+      wavesurferRef.current = null;
+    }
+
     const ws = WaveSurfer.create({
       container: containerRef.current,
       waveColor: `${lensAccentColor}40`, // 25% opacity
@@ -98,6 +104,24 @@ export function useAudioPlayer({
       ws.setPlaybackRate(playbackSpeed);
     }
   }, [playbackSpeed, isReady]);
+
+  // CRITICAL: Sync WaveSurfer with store's isPlaying state
+  // This ensures external play/pause commands (from MiniPlayer) work correctly
+  useEffect(() => {
+    const ws = wavesurferRef.current;
+    if (!ws || !isReady) return;
+
+    const wsIsPlaying = ws.isPlaying();
+    
+    // If store says play but WaveSurfer is paused, play it
+    if (isPlaying && !wsIsPlaying) {
+      ws.play();
+    }
+    // If store says pause but WaveSurfer is playing, pause it
+    else if (!isPlaying && wsIsPlaying) {
+      ws.pause();
+    }
+  }, [isPlaying, isReady]);
 
   // Listen for global keyboard shortcut events
   useEffect(() => {
