@@ -1,16 +1,16 @@
 [phases.setup]
-nixPkgs = ["nodejs_18", "python3"]
+nixPkgs = ["nodejs_18"]
 
 [phases.install]
 cmds = [
-  "npm install",
-  "cd client && npm install",
-  "cd server && npm install"
+  "npm install --include=dev",
+  "npm install --prefix client --include=dev",
+  "npm install --prefix server --include=dev"
 ]
 
 [phases.build]
 cmds = [
-  "cd client && npm run build"
+  "npm run build --prefix client"
 ]
 
 [start]
