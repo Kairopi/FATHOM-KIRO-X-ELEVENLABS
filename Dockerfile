@@ -31,7 +31,9 @@ COPY --from=builder /app/client/dist ./client/dist
 COPY --from=builder /app/server/dist ./server/dist
 COPY --from=builder /app/server/node_modules ./server/node_modules
 COPY --from=builder /app/server/package.json ./server/
-COPY --from=builder /app/public ./public
+
+# Create public directory structure (audio files are generated at runtime)
+RUN mkdir -p public/audio/tracks public/audio/soundscapes public/audio/music public/audio/interrupts public/audio/previews public/audio/temp
 
 # Set environment
 ENV NODE_ENV=production
