@@ -1,15 +1,11 @@
 services:
   - type: web
-    name: fathom-backend
-    env: node
-    region: oregon
-    plan: free
-    rootDir: ./server
-    buildCommand: npm ci
-    startCommand: npm run start
+    name: fathom
+    runtime: docker
+    dockerfilePath: ./Dockerfile
     envVars:
-      - key: NODE_VERSION
-        value: 18.18.0
+      - key: NODE_ENV
+        value: production
       - key: ELEVENLABS_API_KEY
         sync: false
       - key: DASHSCOPE_API_KEY
@@ -17,20 +13,4 @@ services:
       - key: ACCESS_CODE
         value: JUDGE2024
       - key: PORT
-        value: 3001
-  
-  - type: web
-    name: fathom-frontend
-    env: static
-    region: oregon
-    plan: free
-    rootDir: ./client
-    buildCommand: npm ci && npm run build
-    staticPublishPath: ./dist
-    envVars:
-      - key: NODE_VERSION
-        value: 18.18.0
-    routes:
-      - type: rewrite
-        source: /api/*
-        destination: https://fathom-backend.onrender.com/api/*
+        value: 10000
