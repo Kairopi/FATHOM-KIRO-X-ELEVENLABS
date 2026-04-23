@@ -1,8 +1,8 @@
 [build]
-builder = "NIXPACKS"
-buildCommand = "npm ci && cd client && npm ci && cd ../server && npm ci && cd .. && npm run build --prefix client && npm run build --prefix server"
+builder = "DOCKERFILE"
+dockerfilePath = "Dockerfile"
 
 [deploy]
-startCommand = "npm run start"
+startCommand = "node server/dist/index.js"
 restartPolicyType = "ON_FAILURE"
 restartPolicyMaxRetries = 10
