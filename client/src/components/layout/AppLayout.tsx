@@ -11,8 +11,23 @@ export function AppLayout() {
   const hasMiniPlayer = !!currentTrack;
   const location = useLocation();
 
+  // Get page title for screen reader announcement
+  const getPageTitle = (pathname: string) => {
+    if (pathname === '/') return 'Home';
+    if (pathname.startsWith('/player')) return 'Player';
+    if (pathname === '/library') return 'Library';
+    if (pathname === '/settings') return 'Settings';
+    if (pathname.startsWith('/share')) return 'Shared Track';
+    return 'Page';
+  };
+
   return (
     <div className="min-h-screen bg-[var(--bg-primary)]">
+      {/* Screen reader announcement for route changes */}
+      <div role="status" aria-live="polite" aria-atomic="true" className="sr-only">
+        {getPageTitle(location.pathname)} page
+      </div>
+
       <Sidebar />
       <BottomTabBar />
       <MiniPlayer />

@@ -5,7 +5,6 @@ import { cn } from '@/lib/utils';
 import { useStore } from '@/store';
 import { getLensMetadata } from '@/lib/lenses';
 import { LensIcon } from '@/components/ui/LensIcon';
-import { SPRING_SNAPPY, SPRING_GENTLE } from '@/lib/motion';
 
 export function MiniPlayer() {
   const navigate = useNavigate();
@@ -31,7 +30,7 @@ export function MiniPlayer() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 20 }}
-          transition={SPRING_GENTLE}
+          transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
           className={cn(
             'fixed z-50',
             'bottom-[72px] md:bottom-3',
@@ -64,7 +63,7 @@ export function MiniPlayer() {
               <motion.button
                 type="button"
                 whileTap={{ scale: 0.95 }}
-                transition={SPRING_SNAPPY}
+                transition={{ duration: 0.15, ease: [0.4, 0, 0.2, 1] }}
                 onClick={() => navigate(`/player/${currentTrack.id}`)}
                 className="shrink-0 w-10 h-10 rounded-lg flex items-center justify-center focus:outline-none focus-visible:outline-2 focus-visible:outline-[var(--border-focus)]"
                 style={{ backgroundColor: `${lensMeta.accentColor}14` }}
@@ -92,7 +91,7 @@ export function MiniPlayer() {
               <motion.button
                 type="button"
                 whileTap={{ scale: 0.9 }}
-                transition={SPRING_SNAPPY}
+                transition={{ duration: 0.15, ease: [0.4, 0, 0.2, 1] }}
                 onClick={() => window.dispatchEvent(new CustomEvent('fathom:play-pause'))}
                 className="shrink-0 w-9 h-9 flex items-center justify-center rounded-full text-white focus:outline-none focus-visible:outline-2 focus-visible:outline-[var(--border-focus)]"
                 style={{ backgroundColor: lensMeta.accentColor }}
@@ -105,7 +104,7 @@ export function MiniPlayer() {
               <motion.button
                 type="button"
                 whileTap={{ scale: 0.9 }}
-                transition={SPRING_SNAPPY}
+                transition={{ duration: 0.15, ease: [0.4, 0, 0.2, 1] }}
                 onClick={handleDismiss}
                 className="shrink-0 w-7 h-7 flex items-center justify-center rounded-md text-[var(--text-muted)] hover:text-[var(--text-tertiary)] hover:bg-[var(--bg-tertiary)] transition-colors focus:outline-none focus-visible:outline-2 focus-visible:outline-[var(--border-focus)]"
                 aria-label="Dismiss player"

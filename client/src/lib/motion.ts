@@ -1,8 +1,8 @@
 // Shared Framer Motion configs - NO SPRINGS (they bounce and feel glitchy)
 // Use simple tween animations for smooth, predictable motion
-export const TWEEN_FAST = { duration: 0.15, ease: "easeOut" };
-export const TWEEN_NORMAL = { duration: 0.2, ease: "easeOut" };
-export const TWEEN_SLOW = { duration: 0.3, ease: "easeInOut" };
+export const TWEEN_FAST = { duration: 0.15, ease: "easeOut" as const };
+export const TWEEN_NORMAL = { duration: 0.2, ease: "easeOut" as const };
+export const TWEEN_SLOW = { duration: 0.3, ease: "easeInOut" as const };
 
 // Stagger Timings
 export const STAGGER_FAST = 0.002;  // 2ms - waveform bars

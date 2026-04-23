@@ -32,6 +32,7 @@ export function BottomTabBar() {
             aria-current={isActive ? 'page' : undefined}
             className={cn(
               'flex flex-col items-center justify-center gap-1 min-w-[56px] min-h-[48px] py-2 px-3 rounded-xl',
+              'focus:outline-none focus-visible:outline-2 focus-visible:outline-[var(--border-focus)] focus-visible:outline-offset-2',
               isActive
                 ? 'text-[var(--accent)]'
                 : 'text-[var(--text-tertiary)] active:text-[var(--text-secondary)]'
