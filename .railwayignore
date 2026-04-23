@@ -1,0 +1,13 @@
+node_modules
+.git
+.kiro
+.vscode
+*.log
+.env.local
+.env.production
+client/dist
+server/dist
+public/audio/tracks
+public/audio/soundscapes
+public/audio/temp
+*.db

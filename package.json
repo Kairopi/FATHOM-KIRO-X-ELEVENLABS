@@ -11,6 +11,9 @@
     "start": "npx tsx server/index.ts",
     "install:all": "npm install && npm install --prefix client && npm install --prefix server"
   },
+  "dependencies": {
+    "tsx": "^4.19.4"
+  },
   "devDependencies": {
     "concurrently": "^9.1.2"
   }
