@@ -4,6 +4,12 @@ export const TWEEN_FAST = { duration: 0.15, ease: "easeOut" as const };
 export const TWEEN_NORMAL = { duration: 0.2, ease: "easeOut" as const };
 export const TWEEN_SLOW = { duration: 0.3, ease: "easeInOut" as const };
 
+// Legacy spring constants (kept for backward compatibility, but use cubic-bezier instead)
+// These are actually tween configs, not springs - springs were removed for being too bouncy
+export const SPRING_SNAPPY = { duration: 0.15, ease: [0.4, 0, 0.2, 1] as const };
+export const SPRING_GENTLE = { duration: 0.2, ease: [0.4, 0, 0.2, 1] as const };
+export const SPRING_SLOW = { duration: 0.3, ease: [0.4, 0, 0.2, 1] as const };
+
 // Stagger Timings
 export const STAGGER_FAST = 0.002;  // 2ms - waveform bars
 export const STAGGER_NORMAL = 0.04; // 40ms - list items, cards

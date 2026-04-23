@@ -4,7 +4,6 @@ import { Sidebar } from './Sidebar';
 import { BottomTabBar } from './BottomTabBar';
 import { MiniPlayer } from './MiniPlayer';
 import { useStore } from '@/store';
-import { PAGE_VARIANTS, PAGE_TRANSITION } from '@/lib/motion';
 
 export function AppLayout() {
   const currentTrack = useStore((s) => s.currentTrack);
