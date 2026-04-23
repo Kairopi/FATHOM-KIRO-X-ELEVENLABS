@@ -98,7 +98,10 @@ app.get('/api/health', (_req, res) => {
 });
 
 // Serve built frontend in production
-const clientDistPath = path.join(__dirname, '..', 'client', 'dist');
+// When running from server/dist/index.js, we need to go up two levels to reach client/dist
+const clientDistPath = path.join(__dirname, '..', '..', 'client', 'dist');
+console.log(`[server] Looking for client dist at: ${clientDistPath}`);
+console.log(`[server] Client dist exists: ${existsSync(clientDistPath)}`);
 if (existsSync(clientDistPath)) {
   app.use(express.static(clientDistPath));
   // SPA fallback — serve index.html for all non-API routes
@@ -106,6 +109,8 @@ if (existsSync(clientDistPath)) {
     res.sendFile(path.join(clientDistPath, 'index.html'));
   });
   console.log(`[server] Serving frontend from ${clientDistPath}`);
+} else {
+  console.warn(`[server] Client dist not found at ${clientDistPath}`);
 }
 
 // Initialize database then start server
