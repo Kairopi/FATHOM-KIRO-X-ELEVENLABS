@@ -65,9 +65,17 @@ export function TrackRow({ track, onPlay, onContextMenu, onToggleFavorite }: Pro
 
       {/* Track info */}
       <div className="flex-1 min-w-0">
-        <p className="text-sm font-medium text-[var(--text-primary)] truncate">
-          {track.title}
-        </p>
+        <div className="flex items-center gap-2">
+          <p className="text-sm font-medium text-[var(--text-primary)] truncate">
+            {track.title}
+          </p>
+          {/* Show "You" badge if user owns this track */}
+          {(track as any).isOwner && (
+            <span className="px-2 py-0.5 text-[10px] font-semibold rounded-full bg-[var(--accent)] text-white flex-shrink-0">
+              YOU
+            </span>
+          )}
+        </div>
         <div className="flex items-center gap-2 mt-0.5">
           <span className="text-xs font-medium" style={{ color: lensMeta.accentColor }}>
             {lensMeta.name}

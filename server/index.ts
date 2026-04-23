@@ -124,6 +124,7 @@ if (existsSync(clientDistPath)) {
 // Initialize database then start server
 async function start() {
   await initDatabase();
+  
   // Render requires binding to 0.0.0.0, not localhost
   app.listen(PORT, '0.0.0.0', () => {
     console.log(`Fathom server running on http://0.0.0.0:${PORT}`);

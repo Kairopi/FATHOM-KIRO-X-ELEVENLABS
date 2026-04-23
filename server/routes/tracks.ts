@@ -44,11 +44,25 @@ async function unlinkSafe(filePath: string) {
 
 const router = Router();
 
-// GET /api/tracks — user's tracks, newest first
+// GET /api/tracks — ALL tracks from ALL users (shared library), newest first
 router.get('/', userMiddleware, (req, res) => {
   try {
-    const tracks = getTracksByUserId(req.user!.id);
-    res.json(tracks.map(trackToJson));
+    // Get ALL tracks from the database, not just user's tracks
+    // This creates a shared library where judges can see everything that's been generated
+    const db = require('../db/database.js').getDatabase();
+    const stmt = db.prepare(`
+      SELECT * FROM tracks 
+      ORDER BY created_at DESC
+    `);
+    const allTracks = stmt.all() as TrackRow[];
+    
+    // Mark which tracks belong to the current user
+    const tracksWithOwnership = allTracks.map(track => ({
+      ...trackToJson(track),
+      isOwner: track.user_id === req.user!.id,
+    }));
+    
+    res.json(tracksWithOwnership);
   } catch (err: any) {
     console.error('Error fetching tracks:', err);
     res.status(500).json({ error: 'Failed to fetch tracks' });
@@ -100,7 +114,7 @@ router.patch('/:id/favorite', userMiddleware, (req, res) => {
   }
 });
 
-// DELETE /api/tracks/:id — cascade delete audio files from disk
+// DELETE /api/tracks/:id — cascade delete audio files from disk (only owner can delete)
 router.delete('/:id', userMiddleware, async (req, res) => {
   try {
     const id = req.params.id as string;
@@ -109,8 +123,9 @@ router.delete('/:id', userMiddleware, async (req, res) => {
       res.status(404).json({ error: 'Track not found' });
       return;
     }
+    // Only the owner can delete their tracks
     if (track.user_id !== req.user!.id) {
-      res.status(403).json({ error: 'Track does not belong to this user' });
+      res.status(403).json({ error: 'You can only delete your own tracks' });
       return;
     }
 

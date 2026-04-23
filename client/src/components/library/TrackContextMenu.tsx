@@ -21,6 +21,7 @@ const MENU_ITEMS = [
 
 export function TrackContextMenu({ track, position, onClose, onPlay, onShare, onDelete }: Props) {
   const menuRef = useRef<HTMLDivElement>(null);
+  const isOwner = (track as any).isOwner;
 
   useEffect(() => {
     function handleClick(e: MouseEvent) {
@@ -40,6 +41,9 @@ export function TrackContextMenu({ track, position, onClose, onPlay, onShare, on
   }, [onClose]);
 
   const actions = { onPlay, onShare, onDelete };
+  
+  // Filter menu items: only show delete if user owns the track
+  const menuItems = MENU_ITEMS.filter(item => item.key !== 'delete' || isOwner);
 
   return (
     <motion.div
@@ -57,7 +61,7 @@ export function TrackContextMenu({ track, position, onClose, onPlay, onShare, on
       role="menu"
       aria-label="Track actions"
     >
-      {MENU_ITEMS.map((item) => (
+      {menuItems.map((item) => (
         <button
           key={item.key}
           onClick={() => {
