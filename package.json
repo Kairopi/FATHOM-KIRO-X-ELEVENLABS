@@ -9,7 +9,8 @@
     "dev:server": "npm run dev --prefix server",
     "build": "npm run build --prefix client && echo Build complete",
     "start": "npx tsx server/index.ts",
-    "install:all": "npm install && npm install --prefix client && npm install --prefix server"
+    "install:all": "npm install && npm install --prefix client && npm install --prefix server",
+    "postinstall": "cd client && npm rebuild @tailwindcss/oxide --force || true"
   },
   "dependencies": {
     "tsx": "^4.19.4"
