@@ -1,8 +1,8 @@
 // Shared Framer Motion spring configs
-// Significantly reduced stiffness for smooth, fluid animations
-export const SPRING_SNAPPY = { type: "spring" as const, stiffness: 200, damping: 28 };
-export const SPRING_GENTLE = { type: "spring" as const, stiffness: 150, damping: 26 };
-export const SPRING_SLOW = { type: "spring" as const, stiffness: 120, damping: 24 };
+// Ultra-smooth, minimal bounce for luxury feel
+export const SPRING_SNAPPY = { type: "spring" as const, stiffness: 150, damping: 30 };
+export const SPRING_GENTLE = { type: "spring" as const, stiffness: 120, damping: 28 };
+export const SPRING_SLOW = { type: "spring" as const, stiffness: 100, damping: 26 };
 
 // Stagger Timings
 export const STAGGER_FAST = 0.002;  // 2ms - waveform bars
@@ -16,18 +16,18 @@ export const DURATION_NORMAL = 350;    // Increased from 200ms
 export const DURATION_SLOW = 450;      // Increased from 400ms
 export const DURATION_EXTRA_SLOW = 800;
 
-// Page transition variants — smooth opacity crossfade
-// Research-based: Human perception 70-700ms, optimal page transitions 500-700ms
+// Page transition variants — ultra-smooth opacity crossfade with overlap
+// Extended duration for buttery smooth feel
 export const PAGE_VARIANTS = {
   initial: { opacity: 0 },
   animate: { opacity: 1 },
   exit: { opacity: 0 },
 } as const;
 
-// Using 600ms for truly smooth, premium feel (Framer University recommendation)
+// Using 800ms for ultra-smooth, luxury app feel
 export const PAGE_TRANSITION = { 
-  duration: 0.6, 
-  ease: [0.32, 0.72, 0, 1] // Custom ease-out curve for smooth deceleration
+  duration: 0.8, 
+  ease: [0.22, 1, 0.36, 1] // Smooth ease-out with gentle deceleration
 } as const;
 
 // Staggered list container

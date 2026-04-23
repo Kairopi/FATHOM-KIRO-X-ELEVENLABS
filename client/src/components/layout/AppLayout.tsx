@@ -33,7 +33,7 @@ export function AppLayout() {
             paddingRight: '16px',
           }}
         >
-          <AnimatePresence mode="wait">
+          <AnimatePresence mode="sync">
             <motion.div
               key={location.pathname}
               variants={PAGE_VARIANTS}
