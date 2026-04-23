@@ -31,16 +31,26 @@ export function AppLayout() {
             marginRight: 'auto',
             paddingLeft: '16px',
             paddingRight: '16px',
+            position: 'relative',
+            minHeight: '100vh'
           }}
         >
-          <AnimatePresence mode="sync">
+          <AnimatePresence mode="wait" initial={false}>
             <motion.div
               key={location.pathname}
-              variants={PAGE_VARIANTS}
-              initial="initial"
-              animate="animate"
-              exit="exit"
-              transition={PAGE_TRANSITION}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ 
+                duration: 0.3,
+                ease: "easeInOut"
+              }}
+              style={{
+                position: 'absolute',
+                width: '100%',
+                top: 0,
+                left: 0
+              }}
             >
               <Outlet />
             </motion.div>

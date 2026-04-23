@@ -1,8 +1,8 @@
-// Shared Framer Motion spring configs
-// Ultra-smooth, minimal bounce for luxury feel
-export const SPRING_SNAPPY = { type: "spring" as const, stiffness: 150, damping: 30 };
-export const SPRING_GENTLE = { type: "spring" as const, stiffness: 120, damping: 28 };
-export const SPRING_SLOW = { type: "spring" as const, stiffness: 100, damping: 26 };
+// Shared Framer Motion configs - NO SPRINGS (they bounce and feel glitchy)
+// Use simple tween animations for smooth, predictable motion
+export const TWEEN_FAST = { duration: 0.15, ease: "easeOut" };
+export const TWEEN_NORMAL = { duration: 0.2, ease: "easeOut" };
+export const TWEEN_SLOW = { duration: 0.3, ease: "easeInOut" };
 
 // Stagger Timings
 export const STAGGER_FAST = 0.002;  // 2ms - waveform bars
@@ -16,18 +16,16 @@ export const DURATION_NORMAL = 350;    // Increased from 200ms
 export const DURATION_SLOW = 450;      // Increased from 400ms
 export const DURATION_EXTRA_SLOW = 800;
 
-// Page transition variants — ultra-smooth opacity crossfade with overlap
-// Extended duration for buttery smooth feel
+// Page transition - simple, fast, no bounce
 export const PAGE_VARIANTS = {
   initial: { opacity: 0 },
   animate: { opacity: 1 },
   exit: { opacity: 0 },
 } as const;
 
-// Using 800ms for ultra-smooth, luxury app feel
 export const PAGE_TRANSITION = { 
-  duration: 0.8, 
-  ease: [0.22, 1, 0.36, 1] // Smooth ease-out with gentle deceleration
+  duration: 0.3, 
+  ease: "easeInOut"
 } as const;
 
 // Staggered list container

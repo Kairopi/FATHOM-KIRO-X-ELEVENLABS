@@ -2,7 +2,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { Home, Library, Settings } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
-import { SPRING_SNAPPY } from '@/lib/motion';
+import { TWEEN_FAST } from '@/lib/motion';
 
 const NAV_ITEMS = [
   { icon: Home, label: 'Home', path: '/' },
@@ -30,7 +30,7 @@ export function Sidebar() {
         <motion.button
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
-          transition={SPRING_SNAPPY}
+          transition={TWEEN_FAST}
           onClick={() => navigate('/')}
           className="flex items-center gap-3 group focus:outline-none focus-visible:outline-2 focus-visible:outline-[var(--border-focus)] focus-visible:outline-offset-2 rounded-lg"
           aria-label="Go to home page"
@@ -50,7 +50,7 @@ export function Sidebar() {
                 key={label}
                 whileHover={!isActive ? { backgroundColor: 'var(--bg-tertiary)' } : {}}
                 whileTap={{ scale: 0.97 }}
-                transition={SPRING_SNAPPY}
+                transition={TWEEN_FAST}
                 onClick={() => navigate(path)}
                 aria-label={label}
                 aria-current={isActive ? 'page' : undefined}
