@@ -98,8 +98,10 @@ app.get('/api/health', (_req, res) => {
 });
 
 // Serve built frontend in production
-// When running from server/dist/index.js, we need to go up two levels to reach client/dist
-const clientDistPath = path.join(__dirname, '..', '..', 'client', 'dist');
+// When running from server/dist/index.js (__dirname = /app/server/dist)
+// We need to go: /app/server/dist -> /app/server -> /app -> /app/client/dist
+const clientDistPath = path.resolve(__dirname, '..', '..', 'client', 'dist');
+console.log(`[server] __dirname: ${__dirname}`);
 console.log(`[server] Looking for client dist at: ${clientDistPath}`);
 console.log(`[server] Client dist exists: ${existsSync(clientDistPath)}`);
 if (existsSync(clientDistPath)) {
@@ -111,6 +113,16 @@ if (existsSync(clientDistPath)) {
   console.log(`[server] Serving frontend from ${clientDistPath}`);
 } else {
   console.warn(`[server] Client dist not found at ${clientDistPath}`);
+  // Try alternative path (in case running from different location)
+  const altPath = path.resolve(process.cwd(), 'client', 'dist');
+  console.log(`[server] Trying alternative path: ${altPath}`);
+  if (existsSync(altPath)) {
+    app.use(express.static(altPath));
+    app.get('*', (_req, res) => {
+      res.sendFile(path.join(altPath, 'index.html'));
+    });
+    console.log(`[server] Serving frontend from ${altPath}`);
+  }
 }
 
 // Initialize database then start server
